@@ -63,5 +63,36 @@ exports.encrypt = async (plainText, key) => {
 };
 
 exports.decrypt = async (cipherText, key) => {
-  return key;
+  console.log(`Cipher Text : ${cipherText.join(' | ')}`);
+  console.log(`Key : ${key}\n`);
+
+  const binaryKey = await stringToBinary(key);
+  console.log(`Binary Key : ${binaryKey.join(' | ')}\n`);
+
+  const cipherTextIP = await permutation(cipherText.join(''), initialPermutationMatrix);
+  const leftCipherTextIP = cipherTextIP.slice(0, 4);
+  const rightCipherTextIP = cipherTextIP.slice(4, 8);
+  console.log(`Cipher Text Initial Permutation (IP) : ${cipherTextIP.join(' | ')}`);
+  console.log(`Left IP (L0) : ${leftCipherTextIP.join(' | ')}`);
+  console.log(`Right IP (R0) : ${rightCipherTextIP.join(' | ')}\n`);
+
+  const keyPC1 = await permutation(binaryKey.join(''), permutedChoice1Matrix);
+  let leftKeyPC1 = keyPC1.slice(0, 4);
+  let rightKeyPC1 = keyPC1.slice(4, 8);
+  console.log(`Key Permuted Choice 1 (PC-1) : ${keyPC1.join(' | ')}`);
+  console.log(`Left PC-1 (C0) : ${leftKeyPC1.join(' | ')}`);
+  console.log(`Right PC-1 (D0) : ${rightKeyPC1.join(' | ')}\n`);
+
+  console.log('Generated 16 CD:');
+  const sixteenCD = await generate16CD(leftKeyPC1, rightKeyPC1);
+
+  console.log('Generated 16 K:');
+  let sixteenK = await generate16K(sixteenCD);
+  sixteenK = sixteenK.reverse();
+
+  console.log('\nGenerated 16 A:');
+  let plainText = await generate16A(leftCipherTextIP, rightCipherTextIP, sixteenK);
+  plainText = await binaryToString(plainText);
+
+  return plainText;
 };
