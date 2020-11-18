@@ -1,18 +1,18 @@
-const shiftMatrix = require('./shift-matrix');
+const rotationMatrix = require('./rotation-matrix');
 const leftShift = require('./left-shift');
 
-module.exports = async (C0, D0) => {
+module.exports = async (leftKeyPC1, rightKeyPC1) => {
   // TODO: Change for loop with map instead
   const result = [];
 
-  for (index in shiftMatrix) {
-    C0 = await leftShift(C0.join(''), shiftMatrix[index]);
-    D0 = await leftShift(D0.join(''), shiftMatrix[index]);
-    console.log(`C${parseInt(index) + 1} : ${C0.join(' | ')}`);
-    console.log(`D${parseInt(index) + 1} : ${D0.join(' | ')}`);
-    const chunk = await C0.concat(D0);
-    console.log(`C${parseInt(index) + 1}D${parseInt(index) + 1} : ${chunk.join(' | ')} \n`);
-    result.push(chunk);
+  for (index in rotationMatrix) {
+    leftKeyPC1 = await leftShift(leftKeyPC1.join(''), rotationMatrix[index], 4);
+    console.log(`C${parseInt(index) + 1} : ${leftKeyPC1.join(' | ')}`);
+    rightKeyPC1 = await leftShift(rightKeyPC1.join(''), rotationMatrix[index], 4);
+    console.log(`D${parseInt(index) + 1} : ${rightKeyPC1.join(' | ')}`);
+    const CiDi = await leftKeyPC1.concat(rightKeyPC1);
+    result.push(CiDi);
+    console.log(`C${parseInt(index) + 1}D${parseInt(index) + 1} : ${CiDi.join(' | ')}\n`);
   }
 
   return result;

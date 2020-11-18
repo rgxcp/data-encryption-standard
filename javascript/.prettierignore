@@ -1,7 +1,7 @@
-expansion-matrix.js
-final-permutation-matrix.js
-initial-permutation-matrix.js
-permutation-matrix.js
-permuted-choice-1-matrix.js
-permuted-choice-2-matrix.js
-string-to-binary.js
+javascript/expansion-matrix.js
+javascript/final-permutation-matrix.js
+javascript/initial-permutation-matrix.js
+javascript/permutation-matrix.js
+javascript/permuted-choice-1-matrix.js
+javascript/permuted-choice-2-matrix.js
+javascript/string-to-binary.js

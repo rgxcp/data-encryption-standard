@@ -6,9 +6,9 @@ module.exports = async (sixteenCD) => {
   const result = [];
 
   for (index in sixteenCD) {
-    const chunk = await permutation(sixteenCD[index].join(''), permutedChoice2Matrix);
-    console.log(`K${parseInt(index) + 1} : ${chunk.join(' | ')}`);
-    result.push(chunk);
+    const Ki = await permutation(sixteenCD[index].join(''), permutedChoice2Matrix, 8);
+    result.push(Ki);
+    console.log(`K${parseInt(index) + 1} : ${Ki.join(' | ')}`);
   }
 
   return result;

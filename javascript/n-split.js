@@ -1,10 +1,10 @@
-module.exports = async (data, size) => {
-  let result = [];
+module.exports = async (data, returnLengthSize) => {
+  const result = [];
+  const indexSize = Math.ceil(data.length / returnLengthSize);
   let index = 0;
-  const chunkSize = data.length / size;
 
   while (index < data.length) {
-    const chunk = await data.slice(index, (index += chunkSize)).join('');
+    const chunk = await data.slice(index, (index += indexSize)).join('');
     result.push(chunk);
   }
 

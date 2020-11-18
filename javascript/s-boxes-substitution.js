@@ -1,24 +1,19 @@
 const sBoxesMatrix = require('./s-boxes-matrix');
+const addLeftBit = require('./add-left-bit');
+const binaryToDecimal = require('./binary-to-decimal');
+const decimalToBinary = require('./decimal-to-binary');
 
-module.exports = async (data) => {
+module.exports = async (Ai) => {
+  // TODO: Change for loop with map instead
   const result = [];
 
-  for (index in data) {
-    const chunk = data[index].split('');
-    const column = chunk.splice(1, 4).join('');
-    const row = chunk.join('');
-    const temp = sBoxesMatrix[index][parseInt(row, 2)][parseInt(column, 2)];
-    let binaryResult = temp.toString(2);
-    if (binaryResult.length == 1) {
-      binaryResult = '000' + binaryResult;
-    } else if (binaryResult.length == 2) {
-      binaryResult = '00' + binaryResult;
-    } else if (binaryResult.length == 3) {
-      binaryResult = '0' + binaryResult;
-    } else {
-      binaryResult = binaryResult;
-    }
-    result.push(binaryResult);
+  for (index in Ai) {
+    const data = await Ai[index].split('');
+    const column = binaryToDecimal(data.splice(1, 4).join(''));
+    const row = binaryToDecimal(data.join(''));
+    let binary = decimalToBinary(sBoxesMatrix[index][row][column]);
+    binary = addLeftBit(binary, '0', 4);
+    result.push(binary);
   }
 
   return result;

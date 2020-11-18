@@ -1,12 +1,10 @@
 const nSplit = require('./n-split');
 
-module.exports = async (data, matrix, blockSize) => {
+module.exports = async (data, matrix, returnLengthSize) => {
   data = await data.split('');
 
   let result = await matrix.map((value) => data[value - 1]);
-
-  // TODO: Pass block size param when calling this method
-  result = await nSplit(result, blockSize != null ? blockSize : 8);
+  result = await nSplit(result, returnLengthSize);
 
   return result;
 };

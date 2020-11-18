@@ -1,10 +1,11 @@
+const finalPermutationMatrix = require('./final-permutation-matrix');
 const initialPermutationMatrix = require('./initial-permutation-matrix');
 const permutedChoice1Matrix = require('./permuted-choice-1-matrix');
-const binaryToHexadecimal = require('./binary-to-hexadecimal');
+const binaryToHEX = require('./binary-to-hex');
 const binaryToString = require('./binary-to-string');
-const generate16A = require('./generate-16-a');
 const generate16CD = require('./generate-16-cd');
 const generate16K = require('./generate-16-k');
+const generateR16L16 = require('./generate-r16-l16');
 const permutation = require('./permutation');
 const stringToBinary = require('./string-to-binary');
 
@@ -14,74 +15,86 @@ exports.encrypt = async (plainText, key) => {
 
   // Step 1: Convert plain text and key into binary
   const binaryPlainText = await stringToBinary(plainText);
-  // const binaryPlainText = ['01000011', '01001111', '01001101', '01010000', '01010101', '01010100', '01000101', '01010010'];
   console.log(`Binary Plain Text : ${binaryPlainText.join(' | ')}`);
 
   const binaryKey = await stringToBinary(key);
-  // const binaryKey = ['00010011', '00110100', '01010111', '01111001', '10011011', '10111100', '11011111', '11110001'];
   console.log(`Binary Key : ${binaryKey.join(' | ')}\n`);
 
-  // Step 2: Permute binary plain text with IP matrix
-  // Step 2: Slice the result into left and right
-  const plainTextIP = await permutation(binaryPlainText.join(''), initialPermutationMatrix);
+  // Step 2.1: Permute binary plain text with IP matrix
+  // Step 2.2: Split result into left and right
+  const plainTextIP = await permutation(binaryPlainText.join(''), initialPermutationMatrix, 8);
   const leftPlainTextIP = plainTextIP.slice(0, 4);
   const rightPlainTextIP = plainTextIP.slice(4, 8);
   console.log(`Plain Text Initial Permutation (IP) : ${plainTextIP.join(' | ')}`);
-  console.log(`Left IP (L0) : ${leftPlainTextIP.join(' | ')}`);
-  console.log(`Right IP (R0) : ${rightPlainTextIP.join(' | ')}\n`);
+  console.log(`Left (L0) : ${leftPlainTextIP.join(' | ')}`);
+  console.log(`Right (R0) : ${rightPlainTextIP.join(' | ')}\n`);
 
-  // Step 3: Generate key (permute binary key) with PC-1 matrix
-  // Step 3: Slice the result into left and right
-  const keyPC1 = await permutation(binaryKey.join(''), permutedChoice1Matrix);
-  let leftKeyPC1 = keyPC1.slice(0, 4);
-  let rightKeyPC1 = keyPC1.slice(4, 8);
+  // Step 3.1: Generate key (permute binary key) with PC-1 matrix
+  // Step 3.2: Split result into left and right
+  const keyPC1 = await permutation(binaryKey.join(''), permutedChoice1Matrix, 8);
+  const leftKeyPC1 = keyPC1.slice(0, 4);
+  const rightKeyPC1 = keyPC1.slice(4, 8);
   console.log(`Key Permuted Choice 1 (PC-1) : ${keyPC1.join(' | ')}`);
-  console.log(`Left PC-1 (C0) : ${leftKeyPC1.join(' | ')}`);
-  console.log(`Right PC-1 (D0) : ${rightKeyPC1.join(' | ')}\n`);
+  console.log(`Left (C0) : ${leftKeyPC1.join(' | ')}`);
+  console.log(`Right (D0) : ${rightKeyPC1.join(' | ')}\n`);
 
-  // Step 4: Left shift C0 and D0 with Shift matrix
-  // Step 4: Combine left shift result Cn and Dn as one
+  // Step 4.1: Left shift C0 and D0 with Rotation matrix
+  // Step 4.2: Combine each result as one
   console.log('Generated 16 CD:');
   const sixteenCD = await generate16CD(leftKeyPC1, rightKeyPC1);
 
-  // Step 5: Permute each left shift combined result with PC-2 matrix
+  // Step 5: Permute each CiDi with PC-2 matrix
   console.log('Generated 16 K:');
   const sixteenK = await generate16K(sixteenCD);
 
-  // Step 6:
-  console.log('\nGenerated 16 A:');
-  const cipherText = await generate16A(leftPlainTextIP, rightPlainTextIP, sixteenK);
-  const hexCipherText = await binaryToHexadecimal(cipherText);
-  const stringCipherText = await binaryToString(cipherText);
+  // Step 6.1: Expand R(i)-1 with Expansion matrix = E(Ri)
+  //           R0 = rightPlainTextIP
+  //           R1..16 = Step 6.5
+  // Step 6.2: XOR E(Ri) with Ki = Ai
+  // Step 6.3: Substitute each index of Ai with S-Boxes matrix = Bi
+  // Step 6.4: Permute Bi with Permutation matrix = P(Bi)
+  // Step 6.5: XOR P(Bi) with L(i)-1 = Ri
+  //           L0 = leftPlainTextIP
+  //           L1 = rightPlainTextIP
+  //           L2..16 = R(i)-2
+  // Step 6.6: Repeat 15 times
+  console.log('\nGenerated R16L16:');
+  const R16L16 = await generateR16L16(leftPlainTextIP, rightPlainTextIP, sixteenK);
+  console.log(`R16L16 : ${R16L16.join(' | ')}\n`);
 
-  // TODO: Return this with actual cipher text
+  // Step 7.1: Permute R16L16 with Final Permutation matrix
+  // Step 7.2 (Optional): Convert result into HEX and String
+  const binaryCipherText = await permutation(R16L16.join(''), finalPermutationMatrix, 8);
+  const hexCipherText = await binaryToHEX(binaryCipherText);
+  const stringCipherText = await binaryToString(binaryCipherText);
+
   return {
-    encryptionInBinary: cipherText,
+    encryptionInBinary: binaryCipherText,
     encryptionInHEX: hexCipherText,
-    encryptionInText: stringCipherText
+    encryptionInString: stringCipherText
   };
 };
 
 exports.decrypt = async (cipherText, key) => {
-  console.log(`Cipher Text : ${cipherText.join(' | ')}`);
+  console.log(`Binary Cipher Text : ${cipherText.join(' | ')}`);
   console.log(`Key : ${key}\n`);
 
   const binaryKey = await stringToBinary(key);
   console.log(`Binary Key : ${binaryKey.join(' | ')}\n`);
 
-  const cipherTextIP = await permutation(cipherText.join(''), initialPermutationMatrix);
+  const cipherTextIP = await permutation(cipherText.join(''), initialPermutationMatrix, 8);
   const leftCipherTextIP = cipherTextIP.slice(0, 4);
   const rightCipherTextIP = cipherTextIP.slice(4, 8);
   console.log(`Cipher Text Initial Permutation (IP) : ${cipherTextIP.join(' | ')}`);
-  console.log(`Left IP (L0) : ${leftCipherTextIP.join(' | ')}`);
-  console.log(`Right IP (R0) : ${rightCipherTextIP.join(' | ')}\n`);
+  console.log(`Left (L0) : ${leftCipherTextIP.join(' | ')}`);
+  console.log(`Right (R0) : ${rightCipherTextIP.join(' | ')}\n`);
 
-  const keyPC1 = await permutation(binaryKey.join(''), permutedChoice1Matrix);
-  let leftKeyPC1 = keyPC1.slice(0, 4);
-  let rightKeyPC1 = keyPC1.slice(4, 8);
+  const keyPC1 = await permutation(binaryKey.join(''), permutedChoice1Matrix, 8);
+  const leftKeyPC1 = keyPC1.slice(0, 4);
+  const rightKeyPC1 = keyPC1.slice(4, 8);
   console.log(`Key Permuted Choice 1 (PC-1) : ${keyPC1.join(' | ')}`);
-  console.log(`Left PC-1 (C0) : ${leftKeyPC1.join(' | ')}`);
-  console.log(`Right PC-1 (D0) : ${rightKeyPC1.join(' | ')}\n`);
+  console.log(`Left (C0) : ${leftKeyPC1.join(' | ')}`);
+  console.log(`Right (D0) : ${rightKeyPC1.join(' | ')}\n`);
 
   console.log('Generated 16 CD:');
   const sixteenCD = await generate16CD(leftKeyPC1, rightKeyPC1);
@@ -90,9 +103,12 @@ exports.decrypt = async (cipherText, key) => {
   let sixteenK = await generate16K(sixteenCD);
   sixteenK = sixteenK.reverse();
 
-  console.log('\nGenerated 16 A:');
-  let plainText = await generate16A(leftCipherTextIP, rightCipherTextIP, sixteenK);
-  plainText = await binaryToString(plainText);
+  console.log('\nGenerated R16L16:');
+  const R16L16 = await generateR16L16(leftCipherTextIP, rightCipherTextIP, sixteenK);
+  console.log(`R16L16 : ${R16L16.join(' | ')}\n`);
+
+  let plainText = await permutation(R16L16.join(''), finalPermutationMatrix, 8);
+  plainText = binaryToString(plainText);
 
   return plainText;
 };
