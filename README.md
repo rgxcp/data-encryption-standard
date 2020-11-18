@@ -21,3 +21,4 @@ DEVELOPING
 - [https://www.youtube.com/watch?v=Sy0sXa73PZA](https://www.youtube.com/watch?v=Sy0sXa73PZA)
 - [http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm](http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm)
 - [https://dinus.ac.id/repository/docs/ajar/Data_Encryption_standard_(DES)2015.pdf](https://dinus.ac.id/repository/docs/ajar/Data_Encryption_standard_(DES)2015.pdf)
+- [https://en.wikipedia.org/wiki/DES_supplementary_material](https://en.wikipedia.org/wiki/DES_supplementary_material)
