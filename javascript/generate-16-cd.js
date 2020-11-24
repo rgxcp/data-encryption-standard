@@ -1,5 +1,5 @@
-const rotationMatrix = require('./rotation-matrix');
 const leftShift = require('./left-shift');
+const { rotationMatrix } = require('./matrix');
 
 module.exports = async (leftKeyPC1, rightKeyPC1) => {
   // TODO: Change for loop with map instead

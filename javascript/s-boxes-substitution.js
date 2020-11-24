@@ -1,7 +1,7 @@
-const sBoxesMatrix = require('./s-boxes-matrix');
 const addLeftBit = require('./add-left-bit');
 const binaryToDecimal = require('./binary-to-decimal');
 const decimalToBinary = require('./decimal-to-binary');
+const { sBoxesMatrix } = require('./matrix');
 
 module.exports = async (Ai) => {
   // TODO: Change for loop with map instead

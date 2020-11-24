@@ -1,11 +1,9 @@
-const finalPermutationMatrix = require('./final-permutation-matrix');
-const initialPermutationMatrix = require('./initial-permutation-matrix');
-const permutedChoice1Matrix = require('./permuted-choice-1-matrix');
 const binaryToHEX = require('./binary-to-hex');
 const binaryToString = require('./binary-to-string');
 const generate16CD = require('./generate-16-cd');
 const generate16K = require('./generate-16-k');
 const generateR16L16 = require('./generate-r16-l16');
+const { finalPermutationMatrix, initialPermutationMatrix, permutedChoice1Matrix } = require('./matrix');
 const permutation = require('./permutation');
 const stringToBinary = require('./string-to-binary');
 

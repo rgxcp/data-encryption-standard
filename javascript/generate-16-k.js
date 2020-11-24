@@ -1,4 +1,4 @@
-const permutedChoice2Matrix = require('./permuted-choice-2-matrix');
+const { permutedChoice2Matrix } = require('./matrix');
 const permutation = require('./permutation');
 
 module.exports = async (sixteenCD) => {

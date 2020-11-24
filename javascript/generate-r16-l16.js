@@ -1,5 +1,4 @@
-const expansionMatrix = require('./expansion-matrix');
-const permutationMatrix = require('./permutation-matrix');
+const { expansionMatrix, permutationMatrix } = require('./matrix');
 const permutation = require('./permutation');
 const sBoxesSubstitution = require('./s-boxes-substitution');
 const xor = require('./xor');
