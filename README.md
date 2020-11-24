@@ -1,20 +1,31 @@
-# JavaScript - Data Encryption Standard
-**EN**: DES algorithm implementation in JavaScript.
+# JavaScript/TypeScript - Data Encryption Standard
+**EN**: DES algorithm implementation in JavaScript and TypeScript.
 
-**ID**: Implementasi algoritma DES dalam JavaScript.
+**ID**: Implementasi algoritma DES dalam JavaScript dan TypeScript.
 
 ## Status
-DEVELOPING
+END OF LIFE
 
 ## Requirements
 1. Node.js
+2. NPM
+3. TypeScript
 
 ## How to Use
+### JavaScript
 1. Clone this repository to your desired location.
 2. Change the 8 bit character plain text and key in `javascript/index.js`.
 3. Change terminal directory into `javascript`.
 4. Run `node index.js`.
 5. Do-what-you-want-with-it!
+
+### TypeScript
+1. Clone this repository to your desired location.
+2. Change the 8 bit character plain text and key in `typescript/index.ts`.
+3. Change terminal directory into `typescript`.
+4. Compile all `*.ts` file.
+5. Run `node index.js`.
+6. Do-what-you-want-with-it!
 
 ## References
 - [https://hennyhalimah.blogspot.com/2017/01/algoritma-des-data-encryption-standart.html](https://hennyhalimah.blogspot.com/2017/01/algoritma-des-data-encryption-standart.html)
