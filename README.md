@@ -6,6 +6,8 @@
 ## Status
 END OF LIFE
 
+NOTE: The TypeScript version is not tested, yet.
+
 ## Requirements
 1. Node.js
 2. NPM
