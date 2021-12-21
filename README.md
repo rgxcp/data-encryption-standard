@@ -1,4 +1,4 @@
-# JavaScript/TypeScript - Data Encryption Standard
+# 🕵️ JavaScript/TypeScript - Data Encryption Standard
 **EN**: DES algorithm implementation in JavaScript and TypeScript.
 
 **ID**: Implementasi algoritma DES dalam JavaScript dan TypeScript.
